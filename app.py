@@ -1,10 +1,10 @@
 import os
-from fastapi import FastAPI, Form, HTTPException
+from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel
 import yt_dlp
 from typing import Optional
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -40,11 +40,11 @@ def download_video(url: str) -> bool:
         return False
 
 @app.get("/", response_class=HTMLResponse)
-async def index(request: str):
+async def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/fetch_video_info", response_class=HTMLResponse)
-async def fetch_video_info(request: str, url: str = Form(...)):
+async def fetch_video_info(request: Request, url: str = Form(...)):
     video_info = get_video_info(url)
     if video_info:
         return templates.TemplateResponse("download.html", {"request": request, "video_info": video_info, "url": url})
@@ -52,7 +52,7 @@ async def fetch_video_info(request: str, url: str = Form(...)):
         return templates.TemplateResponse("index.html", {"request": request, "error": "Failed to retrieve video info. Please check the URL."})
 
 @app.post("/download", response_class=HTMLResponse)
-async def download(request: str, url: str = Form(...)):
+async def download(request: Request, url: str = Form(...)):
     success = download_video(url)
     if success:
         return templates.TemplateResponse("success.html", {"request": request})
