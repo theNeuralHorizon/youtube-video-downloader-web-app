@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
+    <title>{{ video_info.title }}</title>
 </head>
 <body>
-    <h1>{{ title }}</h1>
-    <p>Views: {{ views }}</p>
+    <h1>{{ video_info.title }}</h1>
+    <p>Views: {{ video_info.views }}</p>
     <form method="POST" action="/download">
         <input type="hidden" name="url" value="{{ url }}">
         <button type="submit">Download Video</button>
